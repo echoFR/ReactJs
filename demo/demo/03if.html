@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="https://cdn.bootcss.com/react/16.4.0/umd/react.development.js"></script>
+    <script src="https://cdn.bootcss.com/react-dom/16.4.0/umd/react-dom.development.js"></script>
+    <script src="./build/browser.min.js"></script>
+  </head>
+  <body>
+    <div id="example"></div>
+    <script type="text/babel">
+        function Greeting(props) {
+            if(props.isLogin){//登录
+                return <div>登录了</div>
+            }//没有登录
+            return <div>还没有登录</div>
+        }
+        function IsLoginButton(props) {
+            return (
+                <button onClick={props.onClick}>
+                登录了
+                </button>
+            );
+        }
+      class Login extends React.Component{
+          render(){
+              let button=null;
+              let isLogin=this.state.isLogin;
+              if(isLogin){//登录
+                button = <IsLoginButton onClick={this.changeOff} />;
+              }else{
+                button=<button onClick={this.changeOff}>还没有登录</button>                  
+              }
+              return(
+                <div>
+                    <Greeting isLogin={isLogin}></Greeting>
+                    {button}
+                </div>
+            )
+          }
+          constructor(props){
+            super(props);
+            this.changeOff=this.changeOff.bind(this);
+            this.state={
+                isLogin: true
+            }
+          }
+          changeOff(){
+            this.setState((prevState,props)=>({
+                isLogin: !prevState.isLogin
+            }))              
+          }
+      }
+
+      ReactDOM.render(
+        <Login />,
+        document.getElementById('example')
+      )
+    </script>
+  </body>
+</html>

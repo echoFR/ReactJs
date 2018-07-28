@@ -1,0 +1,111 @@
+1.
+mkdir my-react
+cd mkdir my-react
+npm init -y     //package.json
+2.
+mkdir src   创建index.html  index.js
+mkdir dist
+3.
+npm i webpack webpack-cli -D
+在根目录创建webpack.config.js配置
+4.
+webpack运行
+mode 4.0新增    development/production必选
+默认入口文件路径scr->index.js
+默认出口文件路径dist->main.js
+5.
+npm install  webpack-dev-server -D  
+修改package.json
+"scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "webpack-dev-server"
+    //"dev": "webpack-dev-server --open --port 3000 --hot --progress --compress --host 127.0.0.1"
+},
+运行 npm run dev
+
+ Project is running at http://localhost:8080/   
+ webpack output is served from /   
+6.创建HTML  在内存中创建index.html
+npm i html-webpack-plugin -D
+
+在webpack.config.js中添加
+const HTMLPlugin = require('html-webpack-plugin')
+
+plugins: [
+  new HTMLPlugin()
+]
+
+7. Webpack Loader
+JSX文件
+1)安装babel插件
+npm i babel-core babel-loader babel-plugin-transform-runtime -D
+npm i babel-preset-env babel-preset-stage-0 -D
+
+ps:
+babel-core //调用Babel的API进行转码
+babel-preset-stage-0 //解析 ES7  提案
+不再使用babel-preset-es2015取而代之babel-preset-env //解析 ES6
+
+2)安装能够识别转换jsx的包 babel-preset-react
+npm i babel-preset-react -D     //解析 JSX
+3)创建.babelrc配置文件
+{
+    "presets": ["env","stage-0","react"],
+    "plugins": ["transform-runtime"]
+}
+4)添加babel-loader配置项
+修改webpack.dev.config.js, 添加babel-loader
+ /*src文件夹下面的以.js结尾的文件，要使用babel解析*/
+ /*cacheDirectory是用来缓存编译结果，下次编译加速*/
+ module: {
+     rules: [
+         //{
+         //   test: /\.js$/,
+         //   use: ['babel-loader?cacheDirectory=true'],
+         //   include: path.join(__dirname, 'src')
+         //},
+        {
+            test: /\.js|jsx$/,
+            use:'babel-loader',
+            exclude: /node_modules/
+        }
+     ]
+ }
+
+ 8.
+ npm install --save react react-dom -S
+ ps:
+react: 创建组件 虚拟DOM 生命周期
+react-dom 把创建好的组件和虚拟DOM放到页面上显示
+
+在 src/index.js使用react
+import React from 'react';
+import ReactDom from 'react-dom';
+
+index.html 里面添加一个id为app的div作为根节点
+
+8. 在src下mkdir components
+1)export default Hello
+import Hello from './components/Hello.jsx'
+
+2)如果不配置的话不能省略.jsx后缀名
+修改webpack.config.js   添加extensions
+resolve: {
+    //自动扩展文件后缀名，require模块可以省略不写后缀名
+    //默认是 ['.js', '.json'],
+    extensions: ['.js', '.jsx','.json'],
+}
+3)import Hello from '@/components/Hello'
+修改webpack.config.js   添加alias
+resolve: {
+        // 自动扩展文件后缀名，require模块可以省略不写后缀名
+        // 默认是 ['.js', '.json'],
+        extensions: ['.js', '.jsx','.json'],
+        // 模块别名定义，方便后续直接引用别名，无须多写长长的地址
+        alias: {
+            '@': path.join(__dirname,'./src')
+        }
+}
+
+
+

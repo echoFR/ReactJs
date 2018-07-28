@@ -1,0 +1,414 @@
+react.js 、react-dom.js 和 Browser.js ，它们必须首先加载。
+react.js 是 React 的核心库
+react-dom.js 是提供与 DOM 相关的功能
+Browser.js 的作用是将 JSX 语法转为 JavaScript 语法， bable核心库
+这一步很消耗时间，实际上线的时候，应该将它放到服务器完成。
+$ babel src --out-dir build
+上面命令可以将 src 子目录的 js 文件进行语法转换，转码后的文件全部放在 build 子目录。
+
+
+<script type="text/babel">
+    // React 独有的 JSX 语法，跟 JavaScript 不兼容。凡是使用 JSX 的地方，都要加上 type="text/babel" 。
+</script>
+
+
+(一) React元素渲染       
+1. ReactDOM.render(元素,节点)   将元素转为 HTML 语言，并插入指定的 DOM 节点
+//元素里面必须有一个根节点
+//React元素可以是DOM标签，或者自定义的组件
+
+2. 更新元素渲染         
+计时器：
+function tick() {
+  const element = (
+    <div>
+      <h1>Hello, world!</h1>
+      <h2>It is {new Date().toLocaleTimeString()}.</h2>
+    </div>
+  );
+  ReactDOM.render(
+    element,
+    document.getElementById('root')
+  );
+}
+setInterval(tick, 1000);
+//React元素是不可变的
+一般只调用一次ReactDOM.render(),可以利用有状态组件实现DOM更新
+React只会更新必要部分：只渲染改变的部分
+
+（二）JSX   支持HTML和JS混写
+1）
+HTML 语言直接写在 JavaScript 语言之中，不加任何引号
+2）
+遇到HTML标签( <开头 )   就用HTML解析
+遇到代码块( {开头 )     就用JS解析
+3）
+可以传递任何 {} 包裹的 JavaScript 表达式作为一个属性值
+表达式-变量 单花括号  {}
+二元表达式  三元表达式
+4）
+JSX 标签名可以为大写开头的变量。 通过属性值条件渲染组件时
+import { PhotoStory, VideoStory } from './stories';
+const components = {
+  photo: PhotoStory,
+  video: VideoStory
+};
+function Story(props) {
+  const SpecificStory = components[props.storyType];
+  return <SpecificStory story={props.story} />;
+}
+5）
+false、true 、null、undefined 不会直接被渲染
+想让其出现在输出中，必须先把它转换成字符串 String(false)
+而0会被渲染，所以确保需要布尔值的时候不写0
+
+如果你没有给属性传值，它默认为 true。
+<MyTextBox autocomplete />
+<MyTextBox autocomplete={true} />
+6）扩展属性
+... 是将一个数组或者对象展开放到另一个数组/对象，所以可以使用 ... 作为扩展操作符来传递整个属性对象
+const user={
+  name: 'fr',
+  age: 16
+}
+<Hello {...user}/>
+<Hello name={user.name} age={user.age} /> //两者一样
+ps:
+let o2={
+  age: 22,
+  address: 'xiAn'
+}
+let o1={
+  name: 'fr',
+  ...o2
+}
+7）样式
+React 推荐使用内联样式，驼峰语法
+//React 会在指定元素数字后自动添加 px 
+var myStyle = {
+    fontSize: 100,
+    color: '#FF0000'
+};
+ReactDOM.render(
+    <h1 style = {myStyle}>内联样式</h1>,
+    document.getElementById('example')
+);
+8） 数组/列表和key  map
+1.
+JSX允许直接在模板中引入JS变量，若变量是数组，则展开数组的所有成员，添加到模板
+2.
+将key保存在map直接作用的元素上：
+如果提取出一个ListItem组件，应该把key保存在数组中的这个<ListItem />上，而不是ListItem中的<li>上
+function NumberList(props) {
+  const numbers = props.numbers;
+  const listItems = numbers.map((number) =>
+    <li key={number.toString()}>
+      {number}
+    </li>
+  );
+  return (
+    <ul>{listItems}</ul>
+  );
+}
+
+const numbers = [1, 2, 3, 4, 5];
+ReactDOM.render(
+  <NumberList numbers={numbers} />,
+  document.getElementById('root')
+);
+3.
+key会作为给React的提示，但不会传递给你的组件。
+如果您的组件中需要使用和key相同的值，请将其作为属性传递
+（1）
+    var names = ['Alice', 'Emily', 'Kate'];
+    ReactDOM.render(
+    <div>
+    {   //map可以直接在{}里面遍历
+        names.map(function (name, index) {
+        return <div key={index}>Hello, {name}!</div>
+        })
+    }
+    </div>,
+    document.getElementById('example')
+    );
+（2）
+    var arr = [
+        <h1 key="1">Hello world!</h1>,
+        <h2 key="2">React is awesome</h2>,
+      ];
+      ReactDOM.render(
+        <div>{arr}</div>,
+        document.getElementById('example')
+      );
+9）
+为元素添加class类名用className代替，for用htmlFor代替
+
+（三）组件
+1）两种定义 : 组件名称必须大写开头 且只能包含一个顶层标签（大盒子）
+1. 函数定义
+function HelloMessage(props) {
+  return <h1>Hello, {props.name}</h1>;
+}
+//如果return的是null，则什么都不渲染
+2. 类定义
+class HelloMessage extends React.Component {
+  render() {
+    return <h1>Hello, {this.props.name}</h1>;
+  }
+}
+ReactDOM.render(<HelloMessage />,document.getElementById('demo'));
+HelloMessage 是一个组件类  <HelloMessage /> 组件类实例（组件）
+模板插入<HelloMessage />时，自动生成HelloMessage的一个实例，
+所有组件类都有自己的render方法，用于输出组件，
+ps: 
+1. render 后面的return与模板之间不能换行   或者后面加个()
+2. 组件的返回值只能有一个根元素（大div）。
+3. render里面添加style属性的时候：style={{opacity: this.state.opacity}}
+因为React组件样式是一个对象，所以第一大括号表示这是JS语法，第二大括号表示样式对象
+
+2）Props
+组件的用法和HTML标签一样，可以任意加属性，如name属性等
+1. 只读性：函数定义的组件——props、类定义的组件——this.props
+2. 为props设置默认值：组件类的 defaultProps 属性
+class HelloMessage extends React.Component {
+  render() {
+    return (
+      <h1>Hello, {this.props.name}</h1>
+    );
+  }
+}
+HelloMessage.defaultProps = {
+  name: 'Runoob'
+};
+3. Props 验证
+React.PropTypes 在 React v15.5 版本后已经移到了 prop-types 库。
+//<script src="https://cdn.bootcss.com/prop-types/15.6.1/prop-types.js"></script>
+import PropTypes from 'prop-types';
+var title = "aaaa";
+// var title = 123;
+class MyTitle extends React.Component {
+  render() {
+    return (
+      <h1>Hello, {this.props.title}</h1>
+    );
+  }
+}
+MyTitle.propTypes = {
+  title: PropTypes.string    //属性 title 是必须的且是字符串，非字符串类型会自动转换为字符串 
+};
+
+4. State 
+render里面不改变state 不读写DOM信息 不与浏览器交互
+1. this.state={ };
+2. 类构造函数初始化状态this.state
+constructor(props){
+    super(props);
+    this.state={};
+}
+构造函数是唯一能够初始化 this.state 的地方
+3. this.setState()    //可以接收一个对象或者函数
+(1) 不要直接更新状态   this.state.comment = 'Hello';// Wrong
+(2) 状态更新可能是异步的   参数应是一个函数
+setState((prevState,props)=>{//先前的状态,此次更新被应用时的props
+    counter: prevState.counter + props.increment
+})
+ps:
+this.props 和 this.state 都用于描述组件的特性，
+this.props 表示那些一旦定义，就不再改变的特性， 
+this.state 是会随着用户互动而产生变化的特性。
+(3)状态更新合并
+(4)数据自顶向下流动/单向数据流：组件可以选择将其状态作为属性传递给其子组件
+
+5. 组件的生命周期  挂载 更新 销毁
+（1）三个状态
+Mounting：已插入真实 DOM
+Updating：正在被重新渲染
+Unmounting：已移出真实 DOM
+（2）处理函数
+will 函数在进入状态之前调用，did 函数在进入状态之后调用，
+componentWillMount()    组件将要挂载（渲染）  在客户端也在服务端
+componentDidMount()     组件已经挂载    只在客户端  组件已经生成了对应的DOM结构 this.getDOMNode()来进行访问
+//可以在这调用setTimeout, setInterval、发送AJAX请求等操作(防止异部操作阻塞UI)。
+componentWillUpdate(object nextProps, object nextState)   //在组件接收到新的props或者state但还没有render时被调用  在初始化时不会被调用
+componentDidUpdate(object prevProps, object prevState)    //在组件完成更新后立即调用。在初始化时不会被调用。
+componentWillUnmount在组件从 DOM 中移除的时候立刻被调用。
+
+两种特殊状态的处理函数。
+componentWillReceiveProps(object nextProps)：已加载组件收到新的参数时调用
+shouldComponentUpdate(object nextProps, object nextState)：组件判断是否重新渲染时调用 //返回一个布尔值。在组件接收到新的props或者state时被调用。在初始化时或者使用forceUpdate时不被调用。 可以在你确认不需要更新组件时使用
+
+5. 组件API
+设置属性：setProps
+替换属性：replaceProps
+强制更新：forceUpdate
+获取DOM节点：findDOMNode
+判断组件挂载状态：isMounted
+
+(四) 事件处理   驼峰
+1）阻止默认行为，使用preventDefault，不能使用返回 false 的方式
+function handleClick(e) {
+    e.preventDefault();
+    console.log('The link was clicked.');
+}
+2）使用 ES6 class 语法来定义一个组件的时候，事件处理器会成为类的一个方法
+//bind
+class Toggle extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {isToggleOn: true};
+    this.handleClick = this.handleClick.bind(this);// 这边绑定是必要的，这样 `this` 才能在回调函数中使用
+  }
+  handleClick() {
+    this.setState(prevState => ({
+      isToggleOn: !prevState.isToggleOn
+    }));
+  }
+  render() {
+    return (
+      <button onClick={this.handleClick}>
+        {this.state.isToggleOn ? 'ON' : 'OFF'}
+      </button>
+    );
+  }
+//  属性初始化器
+class LoggingButton extends React.Component {
+  // 这个语法确保了 `this` 绑定在  handleClick 中
+  handleClick = () => {
+    console.log('this is:', this);
+  }
+  render() {
+    return (
+      <button onClick={this.handleClick}>
+        Click me
+      </button>
+    );
+  }
+}
+//在回调函数中使用箭头函数
+class LoggingButton extends React.Component {
+  handleClick() {
+    console.log('this is:', this);
+  }
+  render() {
+    //  这个语法确保了 `this` 绑定在  handleClick 中
+    return (
+      <button onClick={(e) => this.handleClick(e)}>
+        Click me
+      </button>
+    );
+  }
+}
+
+3）向事件处理程序传递参数
+<button onClick={(e) => this.deleteRow(id, e)}>Delete Row</button>  //箭头函数  事件对象必须显示的传递
+<button onClick={this.deleteRow.bind(this, id)}>Delete Row</button> //bind      事件对象将隐式传递
+ps:通过 bind 方式向监听函数传参，在类组件中定义的监听函数，事件对象 e 要排在所传递参数的后面
+class Popper extends React.Component{
+    constructor(){
+        super();
+        this.state = {name:'Hello world!'};
+    }
+    preventPop(name, e){    //事件对象e要放在最后
+        e.preventDefault();
+        alert(name);
+    }
+    render(){
+        return (
+            <div>
+                <p>hello</p>
+                {/* Pass params via bind() method. */}
+                <a href="#" onClick={this.preventPop.bind(this,this.state.name)}>Click</a>
+            </div>
+        );
+    }
+}
+
+(五) 条件渲染
+1.元素变量
+2.与运算符 &&
+如果左边的条件是 true，&& 右侧的元素就会被渲染，
+            如果是 false，React 会忽略并跳过它。
+3.阻止组件渲染
+组件的 render 方法返回 null 并不会影响该组件生命周期方法的回调
+componentWillUpdate 和 componentDidUpdate 依然可以被调用。
+
+（六）表单
+用户在表单填入的内容，属于用户跟组件的互动，应该用state
+1）受控组件
+<input> <textarea>  <select> 
+vaule绑定到state  onChange监控改变state
+每个状态的改变都有一个与之相关的处理函数。
+2）非受控组件
+<input type="file" />  该标签的 value 属性是只读的  
+或者通过 Javascript 的 File API 对文件进行操作 
+onChange方法
+ref操作DOM
+ReactDOM.findDOMNode
+3）多个输入的解决方法
+当你有处理多个受控的input元素时
+你可以通过给每个元素添加一个name属性
+来让处理函数根据 event.target.name的值来选择做什么。
+event.target
+event.target.type==='checkbox'?event.target.checked:event.target.value
+event.target.name
+
+this.setState({
+      [name]: value //使用ES6的计算属性名语法来更新与给定输入名称相对应的状态键
+});
+
+
+当你需要从子组件中更新父组件的 state 时，
+你需要在父组件通过创建事件 ，并作为 prop 传递到你的子组件上
+
+5) 表单bind复用
+6) 表单name复用
+
+（七）获取真实的DOM节点 React Refs 
+this.refs   用于访问在 render 方法中创建的 DOM 节点或 React 元素
+ps:
+处理焦点、文本选择或媒体控制。
+触发强制动画。
+集成第三方 DOM 库
+
+（九）props.children   组件的所有子节点
+1. props.children的值可能有三种：
+当前组件没有子节点 —— undefined
+有一个子节点 —— object
+多个子节点 —— array
+2. React.Children
+React 提供一个工具方法 React.Children 来处理 props.children 
+用 React.Children.map 来遍历子节点，不用担心 this.props.children 的数据类型
+React.Children.map(this.props.children,function(child){遍历})
+
+（十）创建虚拟DOM
+React.createElement();
+参数1：创建元素的类型，字符串，表示元素的名称
+参数2：是一个对象/null，当前DOM的属性
+参数3：子节点（包括虚拟DOM 文本子节点）
+参数n：其他子节点
+返回
+const myh1=React.createElement('h1',{id:'myh1',title:'this is title '},'这是一个h1');
+
+
+（一）create-react-app
+create-react-app 自动创建的项目是基于 Webpack + ES6 。
+$ cnpm install -g create-react-app
+$ create-react-app my-app
+$ cd my-app/
+$ npm start
+create-react-app 执行慢的解决方法：
+在使用 create-react-app my-app 来创建一个新的React应用，在拉取各种资源时,往往会非常慢,一直卡在那：
+fetchMetadata: sill mapToRegistry uri http://registry.npmjs.org/whatwg-fetch
+可以看到资源还是使用了 npmjs.org，解决方法是换成淘宝的资源：
+
+$ npm config set registry https://registry.npm.taobao.org
+-- 配置后可通过下面方式来验证是否成功
+$ npm config get registry
+-- 或 npm info express
+
+
+
+
+
+https://github.com/petehunt/react-howto/blob/master/README-zh.md
+https://github.com/Binaryify/react-demos
