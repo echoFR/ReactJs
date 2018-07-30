@@ -1,0 +1,9 @@
+.title{
+    background-color: blue;
+}
+/* css模块化  只针对类名和id  生效 */
+/* 对于普通的标签选择器不会生效 */
+
+:global(.spans){
+    color: aqua;
+}

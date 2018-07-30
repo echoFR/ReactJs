@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="https://cdn.bootcss.com/react/16.4.0/umd/react.development.js"></script>
+    <script src="https://cdn.bootcss.com/react-dom/16.4.0/umd/react-dom.development.js"></script>
+    <script src="./build/browser.min.js"></script>
+  </head>
+  <body>
+    <div id="example"></div>
+    <script type="text/babel">
+    function Mailbox(props) {
+        const unreadMessages = props.unreadMessages;
+        return (
+            <div>
+            <h1>Hello!</h1>
+            {
+                unreadMessages.length > 0 &&
+                <h2>
+                You have {unreadMessages.length} unread messages.
+                </h2>
+            }
+            </div>
+        );
+    }
+    const messages = [ 'ff', 'rr'];
+    ReactDOM.render(
+    <Mailbox unreadMessages={messages} />,
+    document.getElementById('example')
+    );
+
+    </script>
+  </body>
+</html>
