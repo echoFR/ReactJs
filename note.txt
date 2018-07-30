@@ -145,12 +145,12 @@ key会作为给React的提示，但不会传递给你的组件。
 
 （三）组件
 1）两种定义 : 组件名称必须大写开头 且只能包含一个顶层标签（大盒子）
-1. 函数定义
+1. 函数定义     无状态组件
 function HelloMessage(props) {
   return <h1>Hello, {props.name}</h1>;
 }
 //如果return的是null，则什么都不渲染
-2. 类定义
+2. 类定义     有状态组件
 class HelloMessage extends React.Component {
   render() {
     return <h1>Hello, {this.props.name}</h1>;
@@ -161,6 +161,8 @@ HelloMessage 是一个组件类  <HelloMessage /> 组件类实例（组件）
 模板插入<HelloMessage />时，自动生成HelloMessage的一个实例，
 所有组件类都有自己的render方法，用于输出组件，
 ps: 
+import React,{Component} from 'react'
+class 组件 extends Component{}
 1. render 后面的return与模板之间不能换行   或者后面加个()
 2. 组件的返回值只能有一个根元素（大div）。
 3. render里面添加style属性的时候：style={{opacity: this.state.opacity}}
@@ -412,3 +414,4 @@ $ npm config get registry
 
 https://github.com/petehunt/react-howto/blob/master/README-zh.md
 https://github.com/Binaryify/react-demos
+https://blog.csdn.net/mapbar_front/article/category/6890961/2

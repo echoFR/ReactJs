@@ -25,15 +25,22 @@ module.exports={
                use:'babel-loader',
                exclude: /node_modules/  //排除项
            },
+           {
+               test: /\.css$/,
+            //    可以在css-loader之后通过?追加参数
+            // 其中 有一个固定参数 modules 表示为普通的css样式表启用模块化
+               use: ['style-loader','css-loader?modules&localIdentName=[path][name]-[local]-[hash:5]']   //打包处理css样式的loader
+           },
         ]
     },
-    // resolve: {
-    //     // 自动扩展文件后缀名，require模块可以省略不写后缀名
-    //     // 默认是 ['.js', '.json'],
-    //     extensions: ['.js', '.jsx','.json'],
-    //     // 模块别名定义，方便后续直接引用别名，无须多写长长的地址
-    //     alias: {
-    //         '@': path.join(__dirname,'./src')
-    //     }
-    // }
+    resolve: {
+        // 自动扩展文件后缀名，require模块可以省略不写后缀名
+        // 默认是 ['.js', '.json'],
+        extensions: ['.js', '.jsx','.json'],
+        // 模块别名定义，方便后续直接引用别名，无须多写长长的地址
+        alias: {
+            '@': path.join(__dirname,'src'),
+            components: path.join(__dirname, 'src/components'),            
+        }
+    }
 }
