@@ -7,7 +7,7 @@ import {
 
 import Home from '../components/Home'
 import About from '../components/About'
-import Topics from '../components/Topics'
+import Topics from '../components/topics/Topics'
 class App extends Component {
   render() {
     return (
