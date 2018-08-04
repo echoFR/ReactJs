@@ -31,6 +31,7 @@ class App extends React.Component {
 }
 
 function mapStateToProps(state) {
+    // return state
     return {
         userinfo: state.userinfo
     }

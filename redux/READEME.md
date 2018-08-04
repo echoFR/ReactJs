@@ -1,5 +1,5 @@
 
-# Redux笔记
+# Redux
 [笔记相关的代码](https://note.youdao.com/)
 ## redux基础
 

@@ -1,0 +1,26 @@
+.editor{
+    width: 100%;
+    margin-top: 10px;
+}
+.add-btn{
+    width: 80px;
+    height: 30px;
+    text-align: center;
+    line-height: 30px;
+    background-color: #00b0f0;
+    color: white;
+    font-size: 20px; 
+    cursor: pointer;
+}
+.title{
+    width: 500px;
+    font-size: 20px;
+    padding: 5px 10px;
+}
+.context{
+    width: 100%;
+    height: 200px;
+}
+.big-title{
+    text-align: center;
+}

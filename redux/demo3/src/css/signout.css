@@ -1,0 +1,9 @@
+.out-btn{
+    width: 80px;
+    height: 30px;
+    text-align: center;
+    line-height: 30px;
+    background-color: #00b0f0;
+    color: white;
+    cursor: pointer;
+}

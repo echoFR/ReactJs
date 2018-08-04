@@ -9,6 +9,7 @@ class C extends React.Component {
         )
     }
     changeUserInfo() {
+        console.log(this.props);
         const actions = this.props.actions
         actions.login({
             userid: '123',
